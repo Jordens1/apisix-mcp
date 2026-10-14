@@ -4,6 +4,10 @@ import { PluginSchema } from "./plugin.js";
 import { StatusSchema } from "./common.js";
 import { createNullablePatchSchema } from "../utils/helper.js";
 
+export const SearchRoutesByHostSchema = z.object({
+  host: z.string().trim().min(1).describe("Exact configured route host or hosts entry, case-insensitive; wildcard values are matched literally"),
+});
+
 export const RouteSchema = z
   .object({
     name: z.string().optional().describe("route name"),

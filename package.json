@@ -1,13 +1,13 @@
 {
   "type": "module",
   "name": "apisix-mcp",
-  "version": "0.0.7",
+  "version": "0.0.7-host-search.1",
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/api7/apisix-mcp.git"
+    "url": "https://github.com/Jordens1/apisix-mcp.git"
   },
-  "homepage": "https://github.com/api7/apisix-mcp",
+  "homepage": "https://github.com/Jordens1/apisix-mcp",
   "keywords": [
     "apisix",
     "mcp",
@@ -19,7 +19,7 @@
     "apisix-mcp": "dist/index.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "npm run build && node --test tests/route-search.test.mjs",
     "build": "tsc && shx chmod +x dist/*.js",
     "start": "node dist/index.js",
     "lint": "eslint . --fix"
@@ -31,9 +31,9 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.7.0",
-    "axios": "^1.8.4",
-    "zod": "^3.24.2"
+    "@modelcontextprotocol/sdk": "1.8.0",
+    "axios": "1.8.4",
+    "zod": "3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",

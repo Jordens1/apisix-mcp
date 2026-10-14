@@ -14,6 +14,7 @@ https://github.com/user-attachments/assets/081e878c-225e-4ff8-a9c5-5813f4784cfe
 - `get_resource`: Retrieve resources by type (routes, services, upstreams, etc.)
 - `delete_resource`: Remove resources by ID
 - `send_request_to_gateway`: Send a request or multiple requests to the APISIX gateway
+- `search_routes_by_host`: Find routes whose configured `host` or `hosts` entry exactly matches a domain (case-insensitive). The tool reads every route page and returns concise route details. A wildcard such as `*.example.com` is searched literally.
 
 ### API Resources Operations
 
@@ -115,6 +116,38 @@ Configure your AI client (Cursor, Claude, Copilot, etc.) with following settings
   }
 }
 ```
+
+### Install the prebuilt fork on Windows for Cursor
+
+Download `apisix-mcp-0.0.7-host-search.1.tgz` from this fork's GitHub Releases. Install Node.js 18 or newer, then run in PowerShell:
+
+```powershell
+$installDir = Join-Path $HOME 'tools\apisix-mcp'
+New-Item -ItemType Directory -Force -Path $installDir | Out-Null
+npm install --prefix $installDir "$HOME\Downloads\apisix-mcp-0.0.7-host-search.1.tgz"
+```
+
+This package contains compiled JavaScript, so Windows does not need pnpm or TypeScript. Set `APISIX_ADMIN_KEY` as a Windows user environment variable, restart Cursor, and put the following in `%USERPROFILE%\.cursor\mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "apisix-custom": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${userHome}/tools/apisix-mcp/node_modules/apisix-mcp/dist/index.js"],
+      "env": {
+        "APISIX_SERVER_HOST": "http://YOUR_APISIX_HOST",
+        "APISIX_ADMIN_API_PORT": "9180",
+        "APISIX_ADMIN_API_PREFIX": "/apisix/admin",
+        "APISIX_ADMIN_KEY": "${env:APISIX_ADMIN_KEY}"
+      }
+    }
+  }
+}
+```
+
+The Windows machine must be able to reach the APISIX Admin API and be allowed by `deployment.admin.allow_admin`. A read-only `viewer` key is sufficient for this search tool. In Cursor, confirm that `search_routes_by_host` is listed, then ask it to search for a known configured host. Do not use `npx apisix-mcp` for this fork: that command can start the published upstream package instead.
 
 ## Environment Variables
 
